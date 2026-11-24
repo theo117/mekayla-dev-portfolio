@@ -294,8 +294,8 @@ const AboutSection = () => {
     },
     {
       year: '2026 – Now',
-      title: 'Software Developer — Cape Wealth Managers',
-      description: 'Promoted to full developer. Resolving bugs, shipping features, managing CI/CD workflows, and contributing at scale.',
+      title: 'Intern - Pinnacle ICT',
+      description: 'Supporting the IT team with troubleshooting, application testing, workstation setup, and technical documentation while developing practical skills.',
       icon: Zap,
     },
   ];
@@ -860,23 +860,24 @@ const ExperienceSection = () => {
   const [activeCommand, setActiveCommand] = useState(0);
 
   const commands = [
-    { cmd: 'whoami', result: 'mekayla@capewealthmanagers — Software Developer' },
-    { cmd: 'cat workflow.txt', result: 'Agile · Scrum · Sprint Planning · Retrospectives · Daily Standups' },
-    { cmd: 'git log --oneline --author="Mekayla"', result: 'feat: resolve module bugs | fix: improve app stability | chore: CI/CD update' },
+    { cmd: 'whoami', result: 'mekayla@pinnacleict — Intern' },
+    { cmd: 'cat workflow.txt', result: 'IT Support · Troubleshooting · Application Testing · Technical Documentation' },
+    { cmd: 'git log --oneline --author="Mekayla"', result: 'test: check application behaviour | docs: record troubleshooting steps | fix: assist with issue resolution' },
     { cmd: 'ls tools/', result: 'Git  GitHub  Jira  Docker  Postman  Maven  VSCode  Figma' },
   ];
 
   const experiences = [
     {
-      title: 'Software Developer',
-      company: 'Cape Wealth Managers (Pty) Ltd',
-      period: 'Feb 2026 – Present',
+      title: 'Intern',
+      company: 'Pinnacle ICT',
+      period: '2026 – Present',
       type: 'CURRENT',
       color: '#00FF88',
       highlights: [
-        'Identifying and resolving bugs across multiple modules, improving application stability and UX',
-        'Participating in full Agile sprint cycles — stand-ups, planning, and retrospectives',
-        'Managing source code via Git & GitHub, adhering to branching strategies and CI/CD workflows',
+        'Assisting with day-to-day IT support and troubleshooting hardware and software issues',
+        'Helping configure workstations, install software, and complete basic system checks',
+        'Supporting application testing, documenting issues, and following up on reported problems',
+        'Maintaining technical notes and learning from senior team members',
       ],
     },
     {
@@ -1117,11 +1118,11 @@ const DocumentsSection = () => {
       id: 'cv',
       title: 'Curriculum Vitae',
       subtitle: 'Mekayla DeWee — Junior Software Developer',
-      description: 'Complete professional resume covering work experience at Cape Wealth Managers, full technical skills inventory, and academic background.',
+      description: 'Complete professional resume covering internship experience at Pinnacle ICT and Cape Wealth Managers, full technical skills inventory, and academic background.',
       icon: FileText,
       color: '#FF1493',
       badge: 'RESUME',
-      details: ['Software Developer · Feb 2026 – Present', 'IT Intern · Feb 2025 – Jan 2026', 'Full tech stack & skills', 'Johannesburg, South Africa'],
+      details: ['Intern - Pinnacle ICT · 2026 – Present', 'IT Intern · Feb 2025 – Jan 2026', 'Full tech stack & skills', 'Johannesburg, South Africa'],
       downloadLabel: 'Download CV',
       href: '/documents/Mekayla_DeWee_Software_Developer_CV.pdf',
     },
