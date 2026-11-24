@@ -295,7 +295,7 @@ const AboutSection = () => {
     {
       year: '2026 – Now',
       title: 'Intern - Pinnacle ICT',
-      description: 'Supporting the IT team with troubleshooting, application testing, workstation setup, and technical documentation while developing practical skills.',
+      description: 'Contributing to software features, debugging application issues, writing tests, and documenting code changes under the guidance of senior developers.',
       icon: Zap,
     },
   ];
@@ -861,8 +861,8 @@ const ExperienceSection = () => {
 
   const commands = [
     { cmd: 'whoami', result: 'mekayla@pinnacleict — Intern' },
-    { cmd: 'cat workflow.txt', result: 'IT Support · Troubleshooting · Application Testing · Technical Documentation' },
-    { cmd: 'git log --oneline --author="Mekayla"', result: 'test: check application behaviour | docs: record troubleshooting steps | fix: assist with issue resolution' },
+    { cmd: 'cat workflow.txt', result: 'Feature Development · Debugging · Testing · Code Reviews · Git' },
+    { cmd: 'git log --oneline --author="Mekayla"', result: 'feat: assist with application features | fix: resolve bugs | test: add regression coverage' },
     { cmd: 'ls tools/', result: 'Git  GitHub  Jira  Docker  Postman  Maven  VSCode  Figma' },
   ];
 
@@ -874,10 +874,10 @@ const ExperienceSection = () => {
       type: 'CURRENT',
       color: '#00FF88',
       highlights: [
-        'Assisting with day-to-day IT support and troubleshooting hardware and software issues',
-        'Helping configure workstations, install software, and complete basic system checks',
-        'Supporting application testing, documenting issues, and following up on reported problems',
-        'Maintaining technical notes and learning from senior team members',
+        'Assisting with frontend and backend features under the guidance of senior developers',
+        'Debugging application issues, fixing defects, and improving existing code',
+        'Writing and running tests to check functionality and prevent regressions',
+        'Using Git for version control, participating in code reviews, and documenting code changes',
       ],
     },
     {
