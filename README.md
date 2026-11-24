@@ -43,6 +43,9 @@ The [original character video](character-animation.mp4) is included for viewing
 and regenerating the assets. The website's animation player uses the optimized
 WebP sequences in [`public/animations/character`](public/animations/character).
 
+The portfolio also includes a [WhatsApp sharing image and metadata](docs/social-preview.md)
+for link previews, matching the existing dark and pink design.
+
 I'm a Software Developer passionate about building modern, user-friendly, and impactful applications. This portfolio showcases my projects, technical skills, certifications, and continuous learning journey as I work toward becoming a professional Full-Stack Developer.
 
 ## 🚀 About Me
