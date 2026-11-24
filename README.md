@@ -11,6 +11,30 @@ npm run dev
 
 Open the local URL printed by Vite in your browser. The portfolio runs without a database. The Rate My Work section and review submission form have been removed.
 
+## Contact form
+
+The contact form submits the visitor's name, email, and message to
+[Web3Forms](https://docs.web3forms.com/how-to-guides/js-frameworks/react-js/simple-react-contact-form).
+Messages are forwarded to the email address associated with the configured access
+key; the visitor's email becomes the reply-to address. The supplied key is already
+configured. To use a different key, set `VITE_WEB3FORMS_ACCESS_KEY` in `.env.local`
+or the hosting provider's build environment, then rebuild the site. Web3Forms
+[access keys are public](https://docs.web3forms.com/getting-started/faq), so they
+are intended to be included in the browser bundle.
+
+The form validates required fields, prevents duplicate submissions while sending,
+and shows success only after the API confirms acceptance. Errors and timeouts
+keep the entered details available for retry. No contact details are written to
+this repository or a portfolio database.
+
+With a local dev or preview server running, run `npm run test:contact` (Node 22+
+and Chrome required; set `CONTACT_TEST_URL` if the server is not on port 5173).
+These browser tests mock Web3Forms responses and never send email. Actual inbox
+delivery must be checked separately using the deployed form and the key owner's
+inbox.
+
+## Interactive character
+
 The hero includes an interactive character extracted from the supplied Hailuo video.
 See [the character guide](docs/interactive-character.md) for the source timeline,
 browser verification, limitations, and asset replacement instructions. To regenerate

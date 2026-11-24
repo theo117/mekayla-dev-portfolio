@@ -1219,16 +1219,82 @@ const DocumentsSection = () => {
   );
 };
 
+// Web3Forms access keys are public identifiers intended for browser forms.
+const WEB3FORMS_ACCESS_KEY = import.meta.env.VITE_WEB3FORMS_ACCESS_KEY?.trim()
+  || '76df574b-73b0-4609-b993-13a22433ed9e';
+
 const ContactSection = () => {
   const ref = useRef(null);
+  const submissionRef = useRef<AbortController | null>(null);
   const isInView = useInView(ref, { once: true, margin: '-100px' });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSent, setIsSent] = useState(false);
+  const [submitError, setSubmitError] = useState('');
 
-  const handleSubmit = (e: React.FormEvent) => {
+  useEffect(() => () => {
+    submissionRef.current?.abort();
+    submissionRef.current = null;
+  }, []);
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    if (submissionRef.current) return;
+
+    const form = e.currentTarget;
+    if (!form.reportValidity()) return;
+
+    const fields = new FormData(form);
+    const name = String(fields.get('name') ?? '').trim();
+    const email = String(fields.get('email') ?? '').trim();
+    const message = String(fields.get('message') ?? '').trim();
+    if (!name || !email || !message) {
+      setSubmitError('Please enter your name, email address, and a message.');
+      return;
+    }
+
+    const controller = new AbortController();
+    submissionRef.current = controller;
+    const timeout = window.setTimeout(() => controller.abort(), 15000);
+    setSubmitError('');
     setIsSubmitting(true);
-    setTimeout(() => { setIsSubmitting(false); setIsSent(true); }, 2000);
+    try {
+      const response = await fetch('https://api.web3forms.com/submit', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+        body: JSON.stringify({
+          access_key: WEB3FORMS_ACCESS_KEY,
+          name,
+          email,
+          message,
+          subject: 'New portfolio message for Mekayla DeWee',
+          from_name: "Mekayla's Portfolio",
+        }),
+        signal: controller.signal,
+      });
+      const result: unknown = await response.json();
+      if (submissionRef.current !== controller) return;
+
+      if (response.ok && typeof result === 'object' && result !== null
+        && 'success' in result && result.success === true) {
+        form.reset();
+        setIsSent(true);
+      } else {
+        setSubmitError(response.status === 429
+          ? 'Too many messages were sent recently. Please wait a few minutes or use the email link.'
+          : "Your message couldn't be submitted. Please try again or use the email link.");
+      }
+    } catch {
+      if (submissionRef.current !== controller) return;
+      setSubmitError(controller.signal.aborted
+        ? 'The request timed out. Please try again or use the email link.'
+        : "We couldn't send your message. Please check your connection and try again, or use the email link.");
+    } finally {
+      window.clearTimeout(timeout);
+      if (submissionRef.current === controller) {
+        submissionRef.current = null;
+        setIsSubmitting(false);
+      }
+    }
   };
 
   const contactLinks = [
@@ -1256,7 +1322,7 @@ const ContactSection = () => {
         </motion.div>
 
         <motion.div
-          className="glass-panel rounded-2xl p-8 md:p-12 relative overflow-hidden"
+          className="glass-panel rounded-2xl p-5 sm:p-8 md:p-12 relative overflow-hidden"
           initial={{ opacity: 0, y: 30 }}
           animate={isInView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.6, delay: 0.2 }}
@@ -1268,9 +1334,9 @@ const ContactSection = () => {
             <span className="text-sm text-green-500 font-mono">OPEN TO OPPORTUNITIES · SIGNAL READY</span>
           </motion.div>
 
-          <div className="grid md:grid-cols-2 gap-12">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
             {/* Links */}
-            <div className="space-y-5">
+            <div className="min-w-0 space-y-5">
               <h3 className="font-display text-lg font-bold mb-6 flex items-center gap-2">
                 <Container className="w-5 h-5 text-pink-neon" />
                 Direct Channels
@@ -1288,10 +1354,10 @@ const ContactSection = () => {
                   transition={{ delay: 0.3 + i * 0.1 }}
                   whileHover={{ x: 5 }}
                 >
-                  <div className="energy-node w-12 h-12 rounded-lg">
+                  <div className="energy-node !w-12 !h-12 shrink-0 rounded-lg">
                     <link.icon className="w-5 h-5 text-pink-neon" />
                   </div>
-                  <div>
+                  <div className="min-w-0 break-words">
                     <span className="text-xs text-gray-500">{link.label}</span>
                     <p className="text-gray-300 group-hover:text-pink-neon transition-colors text-sm">{link.value}</p>
                   </div>
@@ -1304,18 +1370,25 @@ const ContactSection = () => {
             </div>
 
             {/* Form */}
-            <div>
+            <div className="min-w-0">
               <h3 className="font-display text-lg font-bold mb-6 flex items-center gap-2">
                 <Send className="w-5 h-5 text-pink-neon" />
                 Send Message
               </h3>
 
+              <p role="status" className="sr-only">
+                {isSubmitting ? 'Sending your message...' : isSent ? 'Your message has been submitted successfully.' : ''}
+              </p>
               <AnimatePresence mode="wait">
                 {!isSent ? (
-                  <motion.form key="form" onSubmit={handleSubmit} className="space-y-4" initial={{ opacity: 1 }} exit={{ opacity: 0, y: -20 }}>
-                    <motion.input type="text" placeholder="Your Name" className="signal-input w-full" required initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4 }} />
-                    <motion.input type="email" placeholder="Your Email" className="signal-input w-full" required initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.5 }} />
-                    <motion.textarea placeholder="Your Message" rows={4} className="signal-input w-full resize-none" required initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.6 }} />
+                  <motion.form key="form" onSubmit={handleSubmit} aria-label="Contact Mekayla" aria-busy={isSubmitting} aria-describedby={submitError ? 'contact-error' : undefined} className="space-y-4" initial={{ opacity: 1 }} exit={{ opacity: 0, y: -20 }}>
+                    <label htmlFor="contact-name" className="sr-only">Your Name</label>
+                    <motion.input id="contact-name" name="name" type="text" autoComplete="name" placeholder="Your Name" className="signal-input w-full" required disabled={isSubmitting} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4 }} />
+                    <label htmlFor="contact-email" className="sr-only">Your Email</label>
+                    <motion.input id="contact-email" name="email" type="email" autoComplete="email" placeholder="Your Email" className="signal-input w-full" required disabled={isSubmitting} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.5 }} />
+                    <label htmlFor="contact-message" className="sr-only">Your Message</label>
+                    <motion.textarea id="contact-message" name="message" placeholder="Your Message" rows={4} className="signal-input w-full resize-none" required disabled={isSubmitting} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.6 }} />
+                    {submitError && <p id="contact-error" role="alert" className="text-sm text-rose-300">{submitError}</p>}
                     <motion.button
                       type="submit"
                       disabled={isSubmitting}
@@ -1327,9 +1400,12 @@ const ContactSection = () => {
                       whileTap={{ scale: 0.98 }}
                     >
                       {isSubmitting ? (
-                        <motion.div animate={{ rotate: 360 }} transition={{ duration: 1, repeat: Infinity, ease: 'linear' }}>
-                          <Container className="w-5 h-5" />
-                        </motion.div>
+                        <>
+                          <motion.span aria-hidden="true" animate={{ rotate: 360 }} transition={{ duration: 1, repeat: Infinity, ease: 'linear' }}>
+                            <Container className="w-5 h-5" />
+                          </motion.span>
+                          Sending...
+                        </>
                       ) : (
                         <><Send className="w-5 h-5" />Transmit Signal</>
                       )}
@@ -1352,7 +1428,10 @@ const ContactSection = () => {
                       <Zap className="w-10 h-10 text-green-500" />
                     </motion.div>
                     <h4 className="font-display text-xl font-bold text-green-500 mb-2">Signal Received</h4>
-                    <p className="text-gray-400 text-sm">Connection established. I'll be in touch soon!</p>
+                    <p className="text-gray-400 text-sm">Your message has been submitted. Thanks for reaching out!</p>
+                    <button type="button" onClick={() => setIsSent(false)} className="mt-5 text-sm text-pink-neon underline underline-offset-4 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-pink-neon">
+                      Send another message
+                    </button>
                   </motion.div>
                 )}
               </AnimatePresence>
