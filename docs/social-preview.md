@@ -6,7 +6,7 @@ It is a 1200 × 630 JPEG (88,795 bytes). Vite copies it into the build root.
 
 `index.html` includes static Open Graph and Twitter Card metadata, with absolute
 HTTPS image URLs for the custom domain recorded in `CNAME`:
-`https://mekaylad.teodordev.o.za/`. The tags are available in the initial HTML
+`https://mekaylad.teodordev.co.za/`. The tags are available in the initial HTML
 without executing JavaScript. The metadata follows the
 [Open Graph protocol](https://ogp.me/).
 
