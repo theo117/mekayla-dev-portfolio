@@ -9,7 +9,7 @@ npm ci
 npm run dev
 ```
 
-Open the local URL printed by Vite in your browser. The portfolio can be previewed without a database. Public reviews require `VITE_SUPABASE_URL` and `VITE_SUPABASE_ANON_KEY` in a `.env.local` file, plus a Supabase `reviews` table configured for reading and submitting reviews. Without these settings, the page still loads and review submissions are disabled.
+Open the local URL printed by Vite in your browser. The portfolio runs without a database. The Rate My Work section and review submission form have been removed.
 
 The hero includes an interactive character extracted from the supplied Hailuo video.
 See [the character guide](docs/interactive-character.md) for the source timeline,
