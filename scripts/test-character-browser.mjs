@@ -79,7 +79,7 @@ try {
   const frameRequests = [];
   listeners.set('Runtime.exceptionThrown', event => exceptions.push(event));
   listeners.set('Network.requestWillBeSent', event => {
-    if (event.request.url.includes('/animations/character/') && event.request.url.endsWith('.webp')) frameRequests.push(event.request.url);
+    if (event.request.url.includes('/animations/character/') && new URL(event.request.url).pathname.endsWith('.webp')) frameRequests.push(event.request.url);
   });
   await send('Page.enable');
   await send('Runtime.enable');
@@ -98,6 +98,7 @@ try {
   await delay(400); assert.equal((await currentState()).frame, '0');
   assert.equal(new Set(frameRequests).size, 6);
   assert(frameRequests.every(url => url.includes('/idle/')));
+  assert(frameRequests.every(url => new URL(url).searchParams.get('v') === 'clean-1'), 'Old watermarked frame URLs must not be reused');
   console.log('PASS idle rests between short working loops and initially requests only its six frames');
 
   // Reproduce the missed environment: primary input is touch, but a mouse is also used.
@@ -105,7 +106,7 @@ try {
   assert.equal(await evaluate(`matchMedia('(hover: hover) and (pointer: fine)').matches`), false);
   let heldRequests = [];
   listeners.set('Fetch.requestPaused', event => { heldRequests.push(event.requestId); });
-  await send('Fetch.enable', { patterns: [{ urlPattern: '*/look-left/frame_0001.webp' }] });
+  await send('Fetch.enable', { patterns: [{ urlPattern: '*/look-left/frame_0001.webp*' }] });
   await move(100);
   await expectState('look-left');
   await waitFor(() => heldRequests.length > 0, 'delayed look frame');
@@ -157,7 +158,7 @@ try {
   // visible held pose must resume that exact frame rather than restart it.
   heldRequests = [];
   listeners.set('Fetch.requestPaused', event => { heldRequests.push(event.requestId); });
-  await send('Fetch.enable', { patterns: [{ urlPattern: '*/look-right/*.webp' }] });
+  await send('Fetch.enable', { patterns: [{ urlPattern: '*/look-right/*.webp*' }] });
   await move(1300); await expectState('look-right');
   await waitFor(() => heldRequests.length > 0, 'opposite direction decode');
   await move(100); await expectState('look-left', 'held');
@@ -255,7 +256,7 @@ try {
   // Remember mouse input received while the initial idle frame is still loading.
   heldRequests = [];
   listeners.set('Fetch.requestPaused', event => { heldRequests.push(event.requestId); });
-  await send('Fetch.enable', { patterns: [{ urlPattern: '*/idle/frame_0001.webp' }] });
+  await send('Fetch.enable', { patterns: [{ urlPattern: '*/idle/frame_0001.webp*' }] });
   await send('Page.reload', { ignoreCache: true });
   await waitFor(() => heldRequests.length > 0, 'initial idle request');
   // The poster request can precede React mounting. Wait until the player and
@@ -325,6 +326,7 @@ try {
   await move(30, 200); await delay(250);
   assert.equal((await currentState()).mode, 'static');
   assert.equal(await evaluate(`getComputedStyle(document.querySelector('.character-canvas')).opacity`), '0');
+  assert.equal(await evaluate(`new URL(document.querySelector('.character-poster').src).searchParams.get('v')`), 'clean-1');
   assert.deepEqual(exceptions, []);
   console.log('PASS reduced motion remains static; no uncaught browser exceptions');
 } finally {

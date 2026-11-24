@@ -23,7 +23,8 @@ export interface CharacterManifest {
   animations: Record<CharacterAnimationName, CharacterAnimation>;
 }
 
-export const characterAssetUrl = (path: string) => `${import.meta.env.BASE_URL}${path}`;
+// Refresh cached manifests, frames, and the reduced-motion poster after repair.
+export const characterAssetUrl = (path: string) => `${import.meta.env.BASE_URL}${path}?v=clean-1`;
 export const characterPoster = characterAssetUrl('animations/character/idle/frame_0001.webp');
 
 export async function loadCharacterManifest(signal: AbortSignal): Promise<CharacterManifest> {

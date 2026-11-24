@@ -9,6 +9,7 @@
     "lint": "eslint .",
     "preview": "vite preview",
     "typecheck": "tsc --noEmit -p tsconfig.app.json",
+    "character:clean": "node scripts/clean-character-watermark.mjs",
     "character:extract": "node scripts/extract-character-frames.mjs",
     "test:character": "node scripts/test-character-browser.mjs",
     "test:contact": "node scripts/test-contact-browser.mjs"

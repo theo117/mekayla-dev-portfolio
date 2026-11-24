@@ -39,9 +39,11 @@ The hero includes an interactive character extracted from the supplied Hailuo vi
 See [the character guide](docs/interactive-character.md) for the source timeline,
 browser verification, limitations, and asset replacement instructions. To regenerate
 the optimized frames with FFmpeg and FFprobe installed, run `npm run character:extract`.
-The [original character video](character-animation.mp4) is included for viewing
+The [cleaned character video](character-animation.mp4) is included for viewing
 and regenerating the assets. The website's animation player uses the optimized
 WebP sequences in [`public/animations/character`](public/animations/character).
+The corner watermark has been removed from the video and frames; see the
+[cleanup guide](docs/character-watermark-cleanup.md) for details.
 
 The portfolio also includes a [WhatsApp sharing image and metadata](docs/social-preview.md)
 for link previews, matching the existing dark and pink design.

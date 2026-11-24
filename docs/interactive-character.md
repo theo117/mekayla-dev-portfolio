@@ -1,11 +1,18 @@
 # Interactive portfolio character
 
+## Watermark cleanup
+
+The embedded corner watermark has been removed from the root MP4 and production
+WebP frames. See [the cleanup guide](character-watermark-cleanup.md) for the
+localized repair, reproducible commands, and source preservation details. The
+existing poses, timing, dimensions, player, and three-zone behavior are retained.
+
 ## Final presentation polish
 
 The character remains a three-zone, frame-based enhancement to the existing
 portfolio. It uses the same 62 Hailuo WebP frames, manifest, reusable React
-components, and 160 ms transition strategy. No assets were regenerated and no
-animation libraries were added.
+components, and 160 ms transition strategy. The frames were refreshed for the
+watermark cleanup; no animation libraries were added.
 
 - Idle uses a short working loop, with a 1.4-second rest on its neutral first
   frame between loops. On mobile the rest is 2.2 seconds. No canvas redraw or
@@ -59,7 +66,7 @@ simulated in automation. Production excludes the debug overlay.
 
 Performance remains bounded: six idle frames load first; other sequences load on
 interaction in six-frame windows; the decoded-image cache retains at most 20
-images. The animation payload remains 502,755 bytes (about 491 KiB). Playback
+images. After watermark cleanup, the animation payload is 447,091 bytes (about 437 KiB). Playback
 pauses offscreen or when the document is hidden, and timers, listeners, observers,
 requests, and frame references retain their cleanup paths. No CPU or battery
 benchmark is claimed.
@@ -318,11 +325,12 @@ animations, and all animation assets were left unchanged.
 All 62 production frames come from the supplied MP4, sampled at 12 FPS and scaled
 to **736 × 312**, preserving its aspect ratio. WebP quality is 76. Frames use
 `frame_0001.webp` naming inside each sequence directory; each sampled frame is
-stored once. The original background and Hailuo watermark remain.
+stored once. The source background is retained, with a localized repair where the
+corner watermark was removed.
 
-- WebP frames: **496,832 bytes** (485.2 KiB).
+- WebP frames: **441,168 bytes** (430.8 KiB).
 - JSON manifest: **5,923 bytes**.
-- Total animation payload: **502,755 bytes** (491.0 KiB).
+- Total animation payload: **447,091 bytes** (436.6 KiB).
 
 `public/animations/character/manifest.json` records each animation's name, paths,
 count, FPS, looping flag, playback duration, source interval, and limitations.
@@ -330,10 +338,10 @@ Optional `entryFrames` maps a previous animation name to a zero-based starting
 index. Source intervals identify consecutive frames within the shared original
 clip; omit them when replacing a sequence with unrelated footage so that it
 crossfades instead of claiming a continuous source join.
-`idle` loops; all other sequences play once. The original `character-animation.mp4`
+`idle` loops; all other sequences play once. The cleaned `character-animation.mp4`
 is included at the repository root for viewing and regenerating the assets. The
-website continues to play the optimized WebP frames; the original MP4 is not
-copied into the production build. No dependencies or paid services were added.
+website continues to play the optimized WebP frames; the MP4 is not copied into
+the production build. The original watermarked version is retained in Git history.
 
 ## Files
 
@@ -460,5 +468,5 @@ same size before the manifest loads. No React component rewrite is needed.
 For a future asset improvement, use footage with a longer natural idle, a distinct
 left turn, and an actual headphones-on return. Those source movements would remove
 the present fallback/crossfade limitations. Verify the new timeline, interactions,
-and total payload after replacing assets; the current ~491 KiB payload does not
+and total payload after replacing assets; the current ~437 KiB payload does not
 warrant a separate video delivery service.

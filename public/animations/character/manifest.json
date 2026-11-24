@@ -12,7 +12,7 @@
   "height": 312,
   "poster": "animations/character/idle/frame_0001.webp",
   "totalFrames": 62,
-  "totalBytes": 496832,
+  "totalBytes": 441168,
   "animations": {
     "idle": {
       "name": "idle",
@@ -53,9 +53,6 @@
     },
     "look-right": {
       "name": "look-right",
-      "entryFrames": {
-        "idle": 5
-      },
       "frames": [
         "animations/character/look-right/frame_0001.webp",
         "animations/character/look-right/frame_0002.webp",
@@ -74,6 +71,9 @@
       "fps": 12,
       "loop": false,
       "duration": 1,
+      "entryFrames": {
+        "idle": 5
+      },
       "sourceStart": 1.0833333333333333,
       "sourceEnd": 2.0833333333333335,
       "description": "Turns toward screen-right and the laptop."

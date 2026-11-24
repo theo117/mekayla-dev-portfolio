@@ -28,7 +28,7 @@ function run(command, args) {
 
 const probe = JSON.parse(run('ffprobe', [
   '-v', 'error', '-select_streams', 'v:0', '-count_frames', '-show_entries',
-  'stream=width,height,r_frame_rate,nb_read_frames:format=duration,size', '-of', 'json', source,
+  'stream=width,height,r_frame_rate,nb_read_frames,duration:format=duration,size', '-of', 'json', source,
 ]));
 const stream = probe.streams[0];
 const temp = mkdtempSync(join(tmpdir(), 'mekayla-frames-'));
@@ -75,7 +75,7 @@ try {
     version: 1,
     source: {
       filename: 'character-animation.mp4',
-      duration: Number(probe.format.duration),
+      duration: Number(stream.duration ?? probe.format.duration),
       width: stream.width, height: stream.height,
       fps: stream.r_frame_rate, frameCount: Number(stream.nb_read_frames),
     },
